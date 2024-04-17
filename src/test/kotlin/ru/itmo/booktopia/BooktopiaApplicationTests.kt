@@ -1,10 +1,10 @@
-package ru.itmo.booktopia
+package ru.itmo.ecotopia
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class ShoppingApplicationTests {
+class ecotopiaApplicationTests {
 
     @Test
     fun contextLoads() {

@@ -1,6 +1,6 @@
 package ru.itmo.ecotopia.model.enums
 
-enum class Category {
+enum class CategoryProduct {
     CLOTHES,
     FOOD,
     BEAUTY,

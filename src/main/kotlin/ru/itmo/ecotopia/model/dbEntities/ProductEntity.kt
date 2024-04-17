@@ -19,6 +19,7 @@ data class ProductEntity (
 
     var price: Double? = null,
 
+    @Enumerated(EnumType.STRING)
     var categoryProduct: CategoryProduct? = null,
 
     var rating: Double? = null,

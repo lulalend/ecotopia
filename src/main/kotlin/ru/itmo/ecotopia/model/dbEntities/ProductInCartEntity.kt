@@ -1,4 +1,4 @@
-package ru.itmo.ecotopia.model.jPAEntities
+package ru.itmo.ecotopia.model.dbEntities
 
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity

@@ -1,7 +1,7 @@
 package ru.itmo.ecotopia.model.requests
 
-import java.util.*
+import ru.itmo.ecotopia.model.entities.ShopUser
 
 data class CartRequest (
-    val id: UUID
+    val user: ShopUser
 )

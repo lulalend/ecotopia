@@ -1,18 +1,12 @@
 package ru.itmo.ecotopia.model.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import ru.itmo.ecotopia.model.enums.UserRole
 import java.util.UUID
 
-@Entity
-@Table("users")
-data class User (
-    @Id
+data class ShopUser (
     val id: UUID,
-    val name: String,
-    val surname: String,
-    @Column(unique = true)
+    val username: String,
     val email: String,
+    val role: UserRole,
+    val password: String
 )

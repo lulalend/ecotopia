@@ -1,11 +1,15 @@
-package ru.itmo.booktopia
+package ru.itmo.ecotopia
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import ru.itmo.ecotopia.security.configuration.RsaKeyProperties
 
+@ConfigurationPropertiesScan("ru.itmo.ecotopia.security.configuration")
 @SpringBootApplication
-class BooktopiaApplication
+class EcotopiaApplication
 
 fun main(args: Array<String>) {
-    runApplication<BooktopiaApplication>(*args)
+    runApplication<EcotopiaApplication>(*args)
 }

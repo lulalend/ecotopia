@@ -1,16 +1,15 @@
-package ru.itmo.ecotopia.controllers
+package ru.itmo.ecotopia.exceptions
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.lang.Exception
-import java.lang.IllegalArgumentException
 
 @RestControllerAdvice
-class ExceptionController {
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleException(exception: Exception): ResponseEntity<String> {
-        return ResponseEntity(HttpStatus.BAD_REQUEST)
+class ExceptionHandler {
+    @ExceptionHandler(Exception::class)
+    fun handleException(exception: Exception): ResponseEntity<ApiError> {
+        val error = ApiError(exception.message)
+        return ResponseEntity<ApiError>(error, error.status)
     }
 }

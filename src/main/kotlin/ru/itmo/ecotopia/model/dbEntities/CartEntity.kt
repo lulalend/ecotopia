@@ -2,6 +2,7 @@ package ru.itmo.ecotopia.model.JPAentities
 
 import jakarta.persistence.*
 import org.springframework.beans.FatalBeanException
+import ru.itmo.ecotopia.model.dbEntities.ShopUserEntity
 import ru.itmo.ecotopia.model.entities.Cart
 import java.util.UUID
 
@@ -12,12 +13,12 @@ data class CartEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: UUID? = null,
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "user_id", nullable = false)
-//    var userEntity: ShopUserEntity? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var userEntity: ShopUserEntity? = null,
 ) {
     fun toCart(): Cart = Cart (
-        id = this.id ?: throw FatalBeanException("cart's id is null")
-//        user = this.userEntity?.toShopUser() ?: throw FatalBeanException("cart's user is null"),
+        id = this.id ?: throw FatalBeanException("cart's id is null"),
+        user = this.userEntity?.toShopUser() ?: throw FatalBeanException("cart's user is null"),
     )
 }

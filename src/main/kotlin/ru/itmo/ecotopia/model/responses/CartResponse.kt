@@ -1,4 +1,7 @@
 package ru.itmo.ecotopia.model.responses
 
-class CartResponse {
-}
+import java.util.*
+
+data class CartResponse (
+    val id: UUID
+)

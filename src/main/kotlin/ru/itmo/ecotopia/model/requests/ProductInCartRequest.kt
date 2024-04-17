@@ -1,4 +1,8 @@
 package ru.itmo.ecotopia.model.requests
 
-class ProductInCartRequest {
-}
+import java.util.UUID
+
+data class ProductInCartRequest (
+    val cartId: UUID,
+    val productId: UUID,
+)
