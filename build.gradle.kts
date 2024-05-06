@@ -27,6 +27,7 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
     implementation("org.springframework.boot:spring-boot-starter-security:3.2.4")
     implementation("com.nimbusds:nimbus-jose-jwt:9.22")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
