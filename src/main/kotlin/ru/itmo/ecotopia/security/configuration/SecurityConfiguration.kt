@@ -9,17 +9,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.AuthenticationFilter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.config.annotation.web.invoke
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import ru.itmo.ecotopia.model.enums.UserPermission
-import ru.itmo.ecotopia.security.managers.BasicUserAuthenticationManager
+import ru.itmo.ecotopia.security.BasicAuthenticationMatcherFilter
 import ru.itmo.ecotopia.security.managers.BearerAuthenticationManager
 import ru.itmo.ecotopia.service.TokenService
 
@@ -29,8 +29,8 @@ import ru.itmo.ecotopia.service.TokenService
 class SecurityConfiguration {
     @Bean
     fun securityFilterChain(http: HttpSecurity,
-                            basicAuthFilter: UsernamePasswordAuthenticationFilter,
-                            bearerTokenAuthFilter: UsernamePasswordAuthenticationFilter,
+        basicAuthFilter: BasicAuthenticationFilter,
+        bearerTokenAuthFilter: BearerTokenAuthenticationFilter,
     ) : SecurityFilterChain {
         http {
             authorizeRequests {
@@ -57,29 +57,36 @@ class SecurityConfiguration {
             sessionManagement{
                 SessionCreationPolicy.STATELESS
             }
+            addFilterBefore(basicAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+            addFilterBefore(bearerTokenAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(filter = basicAuthFilter)
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(filter = bearerTokenAuthFilter)
+//            addFilterBefore<UsernamePasswordAuthenticationFilter>(filter = basicAuthFilter)
+//            addFilterBefore<UsernamePasswordAuthenticationFilter>(filter = bearerTokenAuthFilter)
         }
         return http.build()
     }
 
     @Bean
-    fun basicAuthFilter(authManager: AuthenticationManager): UsernamePasswordAuthenticationFilter {
-        val filter = UsernamePasswordAuthenticationFilter()
-        filter.setRequiresAuthenticationRequestMatcher(AntPathRequestMatcher("/api/sign_in", "POST"))
-        filter.setAuthenticationManager(authManager)
-        filter.setAuthenticationFailureHandler(AuthenticationEntryPointFailureHandler(HttpStatusEntryPoint(HttpStatus.I_AM_A_TEAPOT)))
+    fun basicAuthFilter(authManager: AuthenticationManager): BasicAuthenticationFilter {
+        val filter = BasicAuthenticationMatcherFilter(authManager, listOf(
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/sign_in"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/sign_up"),
+        ))
+//        val filter = UsernamePasswordAuthenticationFilter()
+//        filter.setRequiresAuthenticationRequestMatcher(AntPathRequestMatcher("/api/sign_in", "POST"))
+//        filter.setAuthenticationManager(authManager)
+//        filter.setAuthenticationFailureHandler(AuthenticationEntryPointFailureHandler(HttpStatusEntryPoint(HttpStatus.I_AM_A_TEAPOT)))
+//        return BasicAuthenticationFilter(authManager)
         return filter
     }
 
     @Bean
-    fun bearerTokenAuthFilter(tokenService: TokenService)
-    : UsernamePasswordAuthenticationFilter {
-        val filter = UsernamePasswordAuthenticationFilter()
-        filter.setAuthenticationManager(BearerAuthenticationManager(tokenService))
-        filter.setRequiresAuthenticationRequestMatcher(AntPathRequestMatcher("/api/**", "POST"))
+    fun bearerTokenAuthFilter(tokenService: TokenService): BearerTokenAuthenticationFilter {
+        val filter = BearerTokenAuthenticationFilter(BearerAuthenticationManager(tokenService))
         filter.setAuthenticationFailureHandler(AuthenticationEntryPointFailureHandler(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+//        filter.setAuthenticationManager(BearerAuthenticationManager(tokenService))
+//        filter.setRequiresAuthenticationRequestMatcher(AntPathRequestMatcher("/api/**", "POST"))
+//        filter.setAuthenticationFailureHandler(AuthenticationEntryPointFailureHandler(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
         return filter
     }
 

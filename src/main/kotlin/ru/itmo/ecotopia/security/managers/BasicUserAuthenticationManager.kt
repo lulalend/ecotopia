@@ -32,7 +32,7 @@ class BasicUserAuthenticationManager(
 
         val permissions = mutableListOf<GrantedAuthority>()
 
-        val permissionsForRole = securityUserProperties.permissions.get(role)
+        val permissionsForRole = securityUserProperties.permissions[role]
                 ?: throw Exception("An unexpected role retrieved from database")
         permissions.addAll(permissionsForRole.map { SimpleGrantedAuthority(it.name) })
 
